@@ -15,9 +15,9 @@ public interface BookTypeDao extends GenericDao<BookType,Long> {
 
     @Query(value = "select booktype from BookType booktype where booktype.type = ?1")
     public BookType  findByType(String type);
-
     @Modifying
     @Query("update BookType booktype set booktype.mark = :mark where booktype.id = :id")
     public Integer updateBookTypeUrlMark(@Param("mark")int mark,@Param("id") Long id);
-
+    @Query(value = "select booktype from BookType booktype where booktype.id = ?1 ")
+    public BookType getByBookTypeById(Long id);
 }

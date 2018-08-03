@@ -26,35 +26,41 @@ public class BookUrlManager extends GenericGenerator {
         List<BookUrl> bookUrlList = new ArrayList<BookUrl>();
         List<BookType> bookTypeList  = bookTypeDao.findAll();
         for(int j=0;j<bookTypeList.size();j++) {
-            String typeUrl = bookTypeList.get(j).getUrl();
-            Document firstDocument = GetDocument.connect(typeUrl);
-            int totalPage = Integer.parseInt(firstDocument.select("#subject_list > div.paginator > a").last().text());
-            for (int i = 0; i <= (totalPage * 20); i += 20) {
-                String bookInformationUrl = typeUrl + "?start=" + i + "&type=T";
-                Document secondDocument = GetDocument.connect(bookInformationUrl);
-                try {
-                    Elements elements = secondDocument.select("#subject_list > ul > li");
-                    for (Element element : elements) {
-                        String bookurl = element.select("div.info > h2 >a").attr("href");
-                        String title = element.select("div.info > h2 >a").text();
-                        System.out.println(title);
-                        System.out.println(bookurl);
-                        BookUrl bookUrl = new BookUrl();
-                        bookUrl.setBookType(bookTypeList.get(j));
-                        bookUrl.setMark(0);
-                        bookUrl.setBookUrl(bookurl);
-                        bookUrl.setTitle(title);
-                        bookUrl.setPage((i / 20) + 1);
-                        bookUrlList.add(bookUrl);
-                        if(bookUrlList.size()>49) {
-                            this.bookUrlDao.saveAll(bookUrlList);
-                            bookUrlList.clear();
+            if (bookTypeList.get(j).getId() >= (long)35) {
+                String typeUrl = bookTypeList.get(j).getUrl();
+                Document firstDocument = GetDocument.connect(typeUrl);
+                int totalPage = Integer.parseInt(firstDocument.select("#subject_list > div.paginator > a").last().text());
+                for (int i = 0; i <= (totalPage * 20); i += 20) {
+                    String bookInformationUrl = typeUrl + "?start=" + i + "&type=T";
+                    Document secondDocument = GetDocument.connect(bookInformationUrl);
+                    try {
+                        Elements elements = secondDocument.select("#subject_list > ul > li");
+                        for (Element element : elements) {
+                            String bookurl = element.select("div.info > h2 >a").attr("href");
+                            String title = element.select("div.info > h2 >a").text();
+                            System.out.println(title);
+                            System.out.println(bookurl);
+                            BookUrl bookUrl = new BookUrl();
+                            bookUrl.setBookType(bookTypeList.get(j));
+                            bookUrl.setMark(0);
+                            bookUrl.setBookUrl(bookurl);
+                            bookUrl.setTitle(title);
+                            bookUrl.setPage((i / 20) + 1);
+                            bookUrlDao.save(bookUrl);
+                            System.out.println("saved......");
                         }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
+                }
+                try {
+                    System.out.println("-----------------------抓取完毕一个分类-------------------------");
+                    Thread.sleep(5000);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
+            bookTypeDao.updateBookTypeUrlMark(1,bookTypeList.get(j).getId());
         }
     }
 }

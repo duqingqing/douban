@@ -30,7 +30,7 @@ public class JpaConfiguration {
         dataSource.setDriverClassName("com.mysql.jdbc.Driver");
         dataSource.setUrl("jdbc:mysql://127.0.0.1:3306/doubanbook?useUnicode=true&characterEncoding=utf8");
         dataSource.setUsername("root");
-        dataSource.setPassword("root");
+        dataSource.setPassword("admin");
         return dataSource;
     }
 

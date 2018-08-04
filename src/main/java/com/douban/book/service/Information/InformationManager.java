@@ -41,40 +41,53 @@ public class InformationManager extends GenericGenerator {
             List<BookUrl> bookUrlList = this.bookUrlDao.findByType(bookType);
             for (int i = 0; i < bookUrlList.size(); i++) {
                 BookUrl bookUrl = bookUrlList.get(i);
-                String url = bookUrl.getBookUrl();
-                System.out.println("【书本地址】" + url);
-                String title = null;
-                String author = null;
-                String ISBN = null;
-                double score = 0;
-                String bookReviewUrl = null;
-                Document document = GetDocument.connect(url);
-                title = document.select("#wrapper > h1 > span").text();
-                author = document.select("#info > a:nth-child(2)").text();
-                if (author.isEmpty()) {
-                    author = document.select("#info > span:nth-child(1) > a").text();
+                if (bookUrl.getMark() == 0) {
+                    String url = bookUrl.getBookUrl();
+                    System.out.println("【书本地址】" + url);
+                    String title = null;
+                    String author = null;
+                    String ISBN = null;
+                    double score = 0;
+                    String bookReviewUrl = null;
+                    try {
+                        Document document = GetDocument.connect(url);
+                        title = document.select("#wrapper > h1 > span").text();
+                        author = document.select("#info > a:nth-child(2)").text();
+                        if (author.isEmpty()) {
+                            author = document.select("#info > span:nth-child(1) > a").text();
+                        }
+                        String[] context = document.select("#info").text().split(" ");
+                        ISBN = context[context.length - 1];
+                        score = GetNumberFromString.getNumber(document.select("#interest_sectl > div > div.rating_self.clearfix > strong").text());
+                        score = score / 10;
+                        bookReviewUrl = document.select("#content > div > div.article > div.related_info > div.mod-hd > h2 > span.pl > a").attr("href");
+                        System.out.println("【标题】 " + title);
+                        System.out.println("【作者】 " + author);
+                        System.out.println("【豆瓣评分】 " + score);
+                        System.out.println("【ISBN】 " + ISBN);
+                        System.out.println("【短评链接】 " + bookReviewUrl);
+                        Information information = new Information();
+                        information.setTitle(title);
+                        information.setAuthor(author);
+                        information.setISBN(ISBN);
+                        information.setUrl(url);
+                        information.setScore(score);
+                        information.setBookReviewUrl(bookReviewUrl);
+                        information.setBookType(bookType);
+                        if(ISBN!=null&&title!=null) {
+                            bookUrlDao.updateBookUrlMark(1, bookUrl.getId());
+                            informationDao.save(information);
+                            System.out.println("Information saved successful !");
+                            System.out.println("----------------------------------------------------");
+                        }else {
+                            System.err.println("ERROR ERROR ERROR ERROR ERROR ERROR ");
+                            return;
+                        }
+                    }catch(Exception e){
+                        e.printStackTrace();
+                        continue;
+                    }
                 }
-                String[] context = document.select("#info").text().split(" ");
-                ISBN = context[context.length - 1];
-                score = GetNumberFromString.getNumber(document.select("#interest_sectl > div > div.rating_self.clearfix > strong").text());
-                score = score / 10;
-                bookReviewUrl = document.select("#content > div > div.article > div.related_info > div.mod-hd > h2 > span.pl > a").attr("href");
-                System.out.println("【标题】 " + title);
-                System.out.println("【作者】 " + author);
-                System.out.println("【豆瓣评分】 " + score);
-                System.out.println("【ISBN】 " + ISBN);
-                System.out.println("【短评链接】 " + bookReviewUrl);
-                Information information = new Information();
-                information.setTitle(title);
-                information.setAuthor(author);
-                information.setISBN(ISBN);
-                information.setUrl(url);
-                information.setBookReviewUrl(bookReviewUrl);
-                information.setBookType(bookType);
-                bookUrlDao.updateBookUrlMark(1, bookUrl.getId());
-                informationDao.save(information);
-                System.out.println("Information saved successful !");
-                System.out.println("----------------------------------------------------");
             }
         }
     }

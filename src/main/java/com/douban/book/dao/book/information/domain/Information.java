@@ -29,9 +29,6 @@ public class Information extends BaseEntity {
     @Column(name="url")
     private String url;
 
-    public void setScore(double score) {
-        this.score = score;
-    }
 
     public String getUrl() {
         return url;
@@ -65,14 +62,6 @@ public class Information extends BaseEntity {
         this.ISBN = ISBN;
     }
 
-    public double getScore() {
-        return score;
-    }
-
-    public void setScore(int score) {
-        this.score = score;
-    }
-
     public String getBookReviewUrl() {
         return bookReviewUrl;
     }
@@ -95,5 +84,13 @@ public class Information extends BaseEntity {
 
     public void setMark(int mark) {
         this.mark = mark;
+    }
+
+    public double getScore() {
+        return score;
+    }
+
+    public void setScore(double score) {
+        this.score = score;
     }
 }

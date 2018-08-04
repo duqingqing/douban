@@ -66,7 +66,13 @@ public class CommentManager extends GenericGenerator {
                 int pageSize = (GetNumberFromString.getNumber(document.select("#total-comments").text())/20)+1;
                 for(int j=1;j<pageSize;j++){
                     String goalUrl = commentUrl+"hot?p="+j;
-                    getoneComment(goalUrl,bookUrl);
+                    System.out.println(goalUrl);
+                    try {
+                        getoneComment(goalUrl, bookUrl);
+                    }catch(Exception e){
+                        e.printStackTrace();
+                        continue;
+                        }
                 }
             }
         }

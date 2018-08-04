@@ -3,6 +3,7 @@ package com.douban.book.service.Information;
 import com.douban.book.base.service.GenericGenerator;
 import com.douban.book.common.GetDocument;
 import com.douban.book.common.GetNumberFromString;
+import com.douban.book.common.SendMesage;
 import com.douban.book.dao.book.information.dao.InformationDao;
 import com.douban.book.dao.book.information.domain.Information;
 import com.douban.book.dao.book.type.dao.BookTypeDao;
@@ -81,6 +82,12 @@ public class InformationManager extends GenericGenerator {
                             System.out.println("----------------------------------------------------");
                         }else {
                             System.err.println("ERROR ERROR ERROR ERROR ERROR ERROR ");
+                            SendMesage sendMesage = new SendMesage();
+                            try {
+                                sendMesage.send("dulovefighting@sina.com");
+                            }catch(Exception e){
+                                e.printStackTrace();
+                            }
                             return;
                         }
                     }catch(Exception e){

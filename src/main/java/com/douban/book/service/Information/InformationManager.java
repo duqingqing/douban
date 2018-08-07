@@ -10,6 +10,8 @@ import com.douban.book.dao.book.type.dao.BookTypeDao;
 import com.douban.book.dao.book.type.domain.BookType;
 import com.douban.book.dao.book.url.dao.BookUrlDao;
 import com.douban.book.dao.book.url.domain.BookUrl;
+import com.douban.book.dao.ip.dao.IpDao;
+import com.douban.book.dao.ip.domain.Ip;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -27,6 +29,8 @@ public class InformationManager extends GenericGenerator {
     BookUrlDao bookUrlDao;
     @Autowired
     BookTypeDao bookTypeDao;
+    @Autowired
+    IpDao ipDao;
 
     @Test
     public void findByBookType() {
@@ -35,9 +39,24 @@ public class InformationManager extends GenericGenerator {
         List<BookUrl> bookUrlList = this.bookUrlDao.findByType(bookType);
         System.out.println(bookUrlList.size());
     }
+
+    public Ip getIpByRandom() {
+        Ip ip = new Ip();
+        List<Ip> ipList = ipDao.findAll();
+        int length = ipList.size();
+        int index = (int) (Math.random() * length);
+        ip = ipList.get(index);
+        while (ip.getMark() == 1) {
+            index = (int) (Math.random() * length);
+            ip = ipList.get(index);
+        }
+        return ip;
+    }
+
     @Test
     public void getInformation() {
-        for (int k = 2; k <= 146;k++) {
+        Document document = null;
+        for (int k = 2; k <= 146; k++) {
             BookType bookType = this.bookTypeDao.getByBookTypeById((long) k);
             List<BookUrl> bookUrlList = this.bookUrlDao.findByType(bookType);
             for (int i = 0; i < bookUrlList.size(); i++) {
@@ -51,7 +70,18 @@ public class InformationManager extends GenericGenerator {
                     double score = 0;
                     String bookReviewUrl = null;
                     try {
-                        Document document = GetDocument.connect(url);
+                        Ip ip = getIpByRandom();
+                        String address = ip.getAddress();
+                        int port = ip.getPort();
+                        try {
+                            document = GetDocument.getDocumentByIP(url, address, port);
+                        } catch (Exception m) {
+                            ipDao.updateIpMark(1, ip.getId());
+                            ip = getIpByRandom();
+                            address = ip.getAddress();
+                            port = ip.getPort();
+                            document = GetDocument.getDocumentByIP(url, address, port);
+                        }
                         title = document.select("#wrapper > h1 > span").text();
                         author = document.select("#info > a:nth-child(2)").text();
                         if (author.isEmpty()) {
@@ -75,22 +105,22 @@ public class InformationManager extends GenericGenerator {
                         information.setScore(score);
                         information.setBookReviewUrl(bookReviewUrl);
                         information.setBookType(bookType);
-                        if(ISBN!=null&&title!=null) {
+                        if (ISBN != null && title != null) {
                             bookUrlDao.updateBookUrlMark(1, bookUrl.getId());
                             informationDao.save(information);
                             System.out.println("Information saved successful !");
                             System.out.println("----------------------------------------------------");
-                        }else {
+                        } else {
                             System.err.println("ERROR ERROR ERROR ERROR ERROR ERROR ");
                             SendMesage sendMesage = new SendMesage();
                             try {
                                 sendMesage.send("dulovefighting@sina.com");
-                            }catch(Exception e){
+                            } catch (Exception e) {
                                 e.printStackTrace();
                             }
                             return;
                         }
-                    }catch(Exception e){
+                    } catch (Exception e) {
                         e.printStackTrace();
                         continue;
                     }

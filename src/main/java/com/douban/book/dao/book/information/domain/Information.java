@@ -7,7 +7,7 @@ import org.junit.Test;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "boot_information")
+@Table(name = "book_information")
 public class Information extends BaseEntity {
 
     @Column(name = "title")

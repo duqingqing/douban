@@ -11,6 +11,8 @@ import com.douban.book.dao.book.url.dao.BookUrlDao;
 import com.douban.book.dao.book.url.domain.BookUrl;
 import com.douban.book.dao.comment.dao.CommentDao;
 import com.douban.book.dao.comment.domain.Comment;
+import com.douban.book.dao.ip.dao.IpDao;
+import com.douban.book.dao.ip.domain.Ip;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -26,6 +28,21 @@ public class CommentManager extends GenericGenerator {
     BookTypeDao bookTypeDao;
     @Autowired
     CommentDao commentDao;
+    @Autowired
+    IpDao ipDao;
+
+    public Ip getIpByRandom() {
+        Ip ip = new Ip();
+        List<Ip> ipList = ipDao.findAll();
+        int length = ipList.size();
+        int index = (int) (Math.random() * length);
+        ip = ipList.get(index);
+        while (ip.getMark() == 1) {
+            index = (int) (Math.random() * length);
+            ip = ipList.get(index);
+        }
+        return ip;
+    }
 
     public void getoneComment(String url,BookUrl bookUrl)
     {
@@ -46,7 +63,7 @@ public class CommentManager extends GenericGenerator {
             comment.setLikes(likes);
             comment.setStar(star);
             comment.setBookUrl(bookUrl);
-            commentDao.save(comment);
+//            commentDao.save(comment);
             System.out.println("comment saved successful !");
             System.out.println("----------------------------------------------------");
         }

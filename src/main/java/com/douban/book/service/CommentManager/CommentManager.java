@@ -64,7 +64,6 @@ public class CommentManager extends GenericGenerator {
                     comment.setContent(content);
                     comment.setLikes(likes);
                     comment.setStar(star);
-                    comment.setBookUrl(bookUrl);
                     commentDao.save(comment);
                     System.out.println("comment saved successful !");
                     System.out.println("----------------------------------------------------");

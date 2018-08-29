@@ -22,6 +22,4 @@ public interface InformationDao  extends GenericDao<Information,Long> {
     @Query("update Information information set information.mark = :mark where information.id = :id")
     public Integer updateInformationMark(@Param("mark")int mark, @Param("id") Long id);
 
-    @Query()
-    public Information getPartInformation();
 }

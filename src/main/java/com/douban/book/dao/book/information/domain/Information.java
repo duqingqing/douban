@@ -2,6 +2,7 @@ package com.douban.book.dao.book.information.domain;
 
 import com.douban.book.base.domain.BaseEntity;
 import com.douban.book.dao.book.type.domain.BookType;
+import com.douban.book.dao.book.url.domain.BookUrl;
 import org.junit.Test;
 
 import javax.persistence.*;
@@ -23,8 +24,23 @@ public class Information extends BaseEntity {
     @ManyToOne
     @JoinColumn(name="booktype")
     private BookType bookType;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="book_url_id",nullable=true, unique=true)
+    private BookUrl bookUrl;
+
+    public BookUrl getBookUrl() {
+        return bookUrl;
+    }
+
+    public void setBookUrl(BookUrl bookUrl) {
+        this.bookUrl = bookUrl;
+    }
+
     @Column(name="mark")
     private int mark;
+
+
 
     @Column(name="url")
     private String url;

@@ -66,7 +66,7 @@ public class InformationManager extends GenericGenerator {
     public void getInformation() {
         Document document = null;
         outer:
-        for (int k = 8; k <= 146; k++) {
+        for (int k = 2; k <= 146; k++) {
             BookType bookType = this.bookTypeDao.getByBookTypeById((long) k);
             List<BookUrl> bookUrlList = this.bookUrlDao.findByType(bookType);
             for (int i = 0; i < bookUrlList.size(); i++) {
@@ -105,7 +105,8 @@ public class InformationManager extends GenericGenerator {
                         information.setScore(score);
                         information.setBookReviewUrl(bookReviewUrl);
                         information.setBookType(bookType);
-                        if (ISBN != null && title != null) {
+                        information.setBookUrl(bookUrl);
+                        if (!((ISBN.trim()).equals("")) && !((title.trim().equals("")))) {
                             bookUrlDao.updateBookUrlMark(1, bookUrl.getId());
                             informationDao.save(information);
                             System.out.println("Information saved successful !");

@@ -16,7 +16,7 @@ import javax.sql.DataSource;
 import java.util.Properties;
 
 @Configuration
-@EnableJpaRepositories(basePackages = "com.douban.book.*")
+@EnableJpaRepositories(basePackages = "com.douban.book")
 public class JpaConfiguration {
 
     @Bean
@@ -28,7 +28,7 @@ public class JpaConfiguration {
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-        dataSource.setUrl("jdbc:mysql://192.168.199.129:3306/doubanbook?useUnicode=true&characterEncoding=utf8");
+        dataSource.setUrl("jdbc:mysql://192.168.150.128:3306/doubanbook?useUnicode=true&characterEncoding=utf8");
         dataSource.setUsername("root");
         dataSource.setPassword("admin");
         return dataSource;
@@ -38,7 +38,7 @@ public class JpaConfiguration {
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         LocalContainerEntityManagerFactoryBean entityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
         entityManagerFactoryBean.setDataSource(dataSource());
-        entityManagerFactoryBean.setPackagesToScan("com.douban.book.*");
+        entityManagerFactoryBean.setPackagesToScan("com.douban.book");
         entityManagerFactoryBean.setJpaProperties(buildHibernateProperties());
         entityManagerFactoryBean.setJpaVendorAdapter(new HibernateJpaVendorAdapter() {{
             setDatabase(Database.MYSQL);

@@ -30,6 +30,7 @@ public class Information extends BaseEntity {
     private String url;
 
 
+
     public String getUrl() {
         return url;
     }

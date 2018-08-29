@@ -1,13 +1,14 @@
 package com.douban.book.dao.ip.domain;
 
+
+
 import com.douban.book.base.domain.BaseEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
-
-@Table(name="ip")
 @Entity
-public class Ip extends BaseEntity{
+@Table(name="ip")
+public class Ip extends BaseEntity {
     private String address;
     private int port;
     private int mark;

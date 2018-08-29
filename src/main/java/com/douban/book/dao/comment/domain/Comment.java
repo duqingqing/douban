@@ -10,21 +10,20 @@ import javax.persistence.*;
 @Entity
 @Table(name = "book_comment")
 public class Comment extends BaseEntity {
-
     @Column(name = "content", columnDefinition = "LONGTEXT")
     private String content;
 
     @Column(name = "star")
     private String star;
 
-    @ManyToOne
-    @JoinColumn(name="url")
-    private BookUrl bookUrl;
+    @ManyToOne(cascade = CascadeType.ALL, optional = true, fetch = FetchType.LAZY)
+    @JoinColumn(name = "information_id", nullable = false)
+    private Information information;
 
-    @Column(name="likes")
+    @Column(name = "likes")
     private int likes;
 
-    @Column(name="mark")
+    @Column(name = "mark")
     private int mark;
 
     public String getContent() {
@@ -43,13 +42,9 @@ public class Comment extends BaseEntity {
         this.star = star;
     }
 
-    public BookUrl getBookUrl() {
-        return bookUrl;
-    }
+    public Information getInformation() { return information; }
 
-    public void setBookUrl(BookUrl bookUrl) {
-        this.bookUrl = bookUrl;
-    }
+    public void setInformation(Information information) { this.information = information; }
 
     public int getLikes() {
         return likes;

@@ -8,10 +8,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.InetSocketAddress;
-import java.net.Proxy;
-import java.net.URL;
+import java.net.*;
 
 public class GetDocument {
     public static Document connect(String url) {
@@ -38,7 +35,7 @@ public class GetDocument {
         return null;
     }
 
-    public static Document getDocumentByIP(String href,String address,int port) {
+    public static Document getDocumentByIP(String href,String address,int port) throws SocketTimeoutException {
         Document doc =null;
         try {
             Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(address, port));
@@ -55,8 +52,8 @@ public class GetDocument {
                 bs.append(line);
             }
              doc = Jsoup.parse(bs.toString());
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SocketTimeoutException e) {
+            throw new RuntimeException(e);
         }finally {
             return doc;
         }

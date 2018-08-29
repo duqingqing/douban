@@ -17,10 +17,13 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+import java.net.SocketTimeoutException;
 import java.util.List;
 import java.util.Optional;
 
+@Component
 public class InformationManager extends GenericGenerator {
 
     @Autowired
@@ -41,22 +44,29 @@ public class InformationManager extends GenericGenerator {
     }
 
     public Ip getIpByRandom() {
-        Ip ip = new Ip();
-        List<Ip> ipList = ipDao.findAll();
-        int length = ipList.size();
-        int index = (int) (Math.random() * length);
+        Ip ip = null;
+        List<Ip> ipList = this.ipDao.findAll();
+        int index = (int) (Math.random() * ipList.size());
         ip = ipList.get(index);
         while (ip.getMark() == 1) {
-            index = (int) (Math.random() * length);
+            index = (int) (Math.random() * ipList.size());
             ip = ipList.get(index);
         }
         return ip;
     }
 
     @Test
+    public void testIP() {
+        Ip ip = null;
+        ip = getIpByRandom();
+        System.out.println(ip.getAddress());
+        System.out.println(ip.getPort());
+    }
+    @Test
     public void getInformation() {
         Document document = null;
-        for (int k = 2; k <= 146; k++) {
+        outer:
+        for (int k = 8; k <= 146; k++) {
             BookType bookType = this.bookTypeDao.getByBookTypeById((long) k);
             List<BookUrl> bookUrlList = this.bookUrlDao.findByType(bookType);
             for (int i = 0; i < bookUrlList.size(); i++) {
@@ -70,18 +80,7 @@ public class InformationManager extends GenericGenerator {
                     double score = 0;
                     String bookReviewUrl = null;
                     try {
-                        Ip ip = getIpByRandom();
-                        String address = ip.getAddress();
-                        int port = ip.getPort();
-                        try {
-                            document = GetDocument.getDocumentByIP(url, address, port);
-                        } catch (Exception m) {
-                            ipDao.updateIpMark(1, ip.getId());
-                            ip = getIpByRandom();
-                            address = ip.getAddress();
-                            port = ip.getPort();
-                            document = GetDocument.getDocumentByIP(url, address, port);
-                        }
+                        document = GetDocument.connect(url);
                         title = document.select("#wrapper > h1 > span").text();
                         author = document.select("#info > a:nth-child(2)").text();
                         if (author.isEmpty()) {
@@ -92,6 +91,7 @@ public class InformationManager extends GenericGenerator {
                         score = GetNumberFromString.getNumber(document.select("#interest_sectl > div > div.rating_self.clearfix > strong").text());
                         score = score / 10;
                         bookReviewUrl = document.select("#content > div > div.article > div.related_info > div.mod-hd > h2 > span.pl > a").attr("href");
+                        System.out.println("************************************");
                         System.out.println("【标题】 " + title);
                         System.out.println("【作者】 " + author);
                         System.out.println("【豆瓣评分】 " + score);
@@ -110,16 +110,25 @@ public class InformationManager extends GenericGenerator {
                             informationDao.save(information);
                             System.out.println("Information saved successful !");
                             System.out.println("----------------------------------------------------");
-                        } else {
-                            System.err.println("ERROR ERROR ERROR ERROR ERROR ERROR ");
+                        }else{
                             SendMesage sendMesage = new SendMesage();
                             try {
-                                sendMesage.send("dulovefighting@sina.com");
+                                sendMesage.sendInformationError("dulovefighting@sina.com");
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-                            return;
+                            break outer;
                         }
+                    }catch(NullPointerException n){
+                        System.err.println("ERROR ERROR ERROR ERROR ERROR ERROR ");
+                        SendMesage sendMesage = new SendMesage();
+                        try {
+                            sendMesage.sendInformationError("dulovefighting@sina.com");
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        n.printStackTrace();
+                        break outer;
                     } catch (Exception e) {
                         e.printStackTrace();
                         continue;

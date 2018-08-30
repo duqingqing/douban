@@ -60,13 +60,19 @@ public class CommentManager extends GenericGenerator {
                     System.out.println("【星级】" + star);
                     System.out.println("【内容】" + content);
                     System.out.println("【投票】" + likes);
-                    Comment comment = new Comment();
-                    comment.setContent(content);
-                    comment.setLikes(likes);
-                    comment.setStar(star);
-                    commentDao.save(comment);
-                    System.out.println("comment saved successful !");
-                    System.out.println("----------------------------------------------------");
+                    if(!(content.trim().equals(""))&&!(star.trim().equals(""))) {
+                        Comment comment = new Comment();
+                        comment.setContent(content);
+                        comment.setLikes(likes);
+                        comment.setStar(star);
+                        comment.setBookUrl(bookUrl);
+                        commentDao.save(comment);
+                        System.out.println("comment saved successful !");
+                        System.out.println("----------------------------------------------------");
+                    }else{
+                        NullPointerException nullPointerException = new NullPointerException();
+                        throw new RuntimeException(nullPointerException);
+                    }
                 }
             }catch(NullPointerException e){
             System.err.println("Comment error");

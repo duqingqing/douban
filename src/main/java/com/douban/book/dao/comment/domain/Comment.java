@@ -16,9 +16,9 @@ public class Comment extends BaseEntity {
     @Column(name = "star")
     private String star;
 
-    @ManyToOne(cascade = CascadeType.ALL, optional = true, fetch = FetchType.LAZY)
-    @JoinColumn(name = "information_id", nullable = false)
-    private Information information;
+    @ManyToOne(cascade=CascadeType.REFRESH,optional=false)
+    @JoinColumn(name="book_url_id",  nullable = false)
+    private BookUrl bookUrl;
 
     @Column(name = "likes")
     private int likes;
@@ -42,9 +42,13 @@ public class Comment extends BaseEntity {
         this.star = star;
     }
 
-    public Information getInformation() { return information; }
+    public BookUrl getBookUrl() {
+        return bookUrl;
+    }
 
-    public void setInformation(Information information) { this.information = information; }
+    public void setBookUrl(BookUrl bookUrl) {
+        this.bookUrl = bookUrl;
+    }
 
     public int getLikes() {
         return likes;

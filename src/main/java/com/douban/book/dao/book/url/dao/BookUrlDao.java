@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.awt.print.Book;
 import java.util.List;
 
 @Transactional
@@ -21,4 +22,7 @@ public interface BookUrlDao extends GenericDao{
     @Modifying
     @Query("update BookUrl bookUrl set bookUrl.mark = :mark where bookUrl.id = :id")
     public Integer updateBookUrlMark(@Param("mark")int mark, @Param("id") Long id);
+
+    @Query(value = "select bookUrl from BookUrl bookUrl where bookUrl.id=?1")
+    public BookUrl findByBookUrlId(Long id);
 }

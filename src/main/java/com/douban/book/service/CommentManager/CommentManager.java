@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.net.SocketTimeoutException;
 import java.util.List;
+import java.util.Optional;
 
 public class CommentManager extends GenericGenerator {
     @Autowired
@@ -64,7 +65,7 @@ public class CommentManager extends GenericGenerator {
                 System.out.println("【投票】" + likes);
                 if (!(content.trim().equals("")) && !(star.trim().equals(""))) {
                     Comment comment = new Comment();
-                    comment.setContent(JudgeStringFormat.filterEmoji(content,""));
+                    comment.setContent(JudgeStringFormat.filterEmoji(content, ""));
                     comment.setLikes(likes);
                     comment.setStar(star);
                     comment.setBookUrl(bookUrl);
@@ -73,12 +74,12 @@ public class CommentManager extends GenericGenerator {
                     System.out.println("----------------------------------------------------");
                 }
             }
-        }catch(NullPointerException nullPointer){
+        } catch (NullPointerException nullPointer) {
             nullPointer.printStackTrace();
-            System.out.println("休眠 ........-_- ........-_- ........-_- ........-_- ........-_- ........-_- ........-_- ........-_-");
+            System.out.println("休眠1 ........-_- ........-_- ........-_- ........-_- ........-_- ........-_- ........-_- ........-_-");
             try {
-                Thread.sleep(1000 * 60 * 30);
-            }catch (InterruptedException interrupted){
+                Thread.sleep(1000 * 60 * 10);
+            } catch (InterruptedException interrupted) {
                 interrupted.printStackTrace();
             }
         }
@@ -86,42 +87,43 @@ public class CommentManager extends GenericGenerator {
 
     @Test
     public void getComment() {
-        outer:
-        for (int k = 2; k <= 3; k++) {
-            BookType bookType = this.bookTypeDao.getByBookTypeById((long) k);
-            List<BookUrl> bookUrlList = this.bookUrlDao.findByType(bookType);
-            for (int i = 0; i < bookUrlList.size(); i++) {
-                BookUrl bookUrl = bookUrlList.get(i);
-                String url = bookUrl.getBookUrl();
-                System.out.println("【书本地址】" + url);
-                String commentUrl = url + "comments/";
-                try {
-                    Document document = GetDocument.connect(commentUrl);
-                    int pageSize = (((GetNumberFromString.getNumber(document.select("#total-comments").text()) / 20) + 1) > 5) ? 5 : 1;
-                    System.out.println(pageSize);
-                    for (int j = 1; j < pageSize; j++) {
-                        String goalUrl = commentUrl + "hot?p=" + j;
-                        System.out.println(goalUrl);
-                        try {
-                            getoneComment(goalUrl, bookUrl);
-                        } catch (NullPointerException n) {
-                            n.printStackTrace();
-                            System.out.println("此条评论为空....................................");
-                            continue;
-                        }
-                    }
-                } catch (NullPointerException ne) {
-                    ne.printStackTrace();
-                    SendMesage sendMesage = new SendMesage();
+        BookUrl bookUrl = null;
+        for (int i = 1386; i <= 1400; i++) {
+//            Optional<BookUrl> bookUrlOptional = bookUrlDao.findById((long) i);
+//            if (bookUrlOptional.isPresent()) {
+//                bookUrl = bookUrlOptional.get();
+//            }
+            bookUrl = bookUrlDao.findByBookUrlId((long)i);
+            String url = bookUrl.getBookUrl();
+            System.out.println("【书本地址】" + url);
+            String commentUrl = url + "comments/";
+            try {
+                Document document = GetDocument.connect(commentUrl);
+                int pageSize = (((GetNumberFromString.getNumber(document.select("#total-comments").text()) / 20) + 1) > 5) ? 5 : 1;
+                System.out.println(pageSize);
+                for (int j = 1; j < pageSize; j++) {
+                    String goalUrl = commentUrl + "hot?p=" + j;
+                    System.out.println(goalUrl);
                     try {
-                        sendMesage.sendCommentError("dulovefighting@sina.com");
-                        System.out.println("休眠 ........-_- ........-_- ........-_- ........-_- ........-_- ........-_- ........-_- ........-_-");
-                        Thread.sleep(1000 * 60 * 30);
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                        getoneComment(goalUrl, bookUrl);
+                    } catch (NullPointerException n) {
+                        n.printStackTrace();
+                        System.out.println("此条评论为空....................................");
+                        continue;
                     }
+                }
+            } catch (NullPointerException ne) {
+                ne.printStackTrace();
+                SendMesage sendMesage = new SendMesage();
+                try {
+                    sendMesage.sendCommentError("dulovefighting@sina.com");
+                    System.out.println("休眠2 ........-_- ........-_- ........-_- ........-_- ........-_- ........-_- ........-_- ........-_-");
+                    Thread.sleep(1000 * 60 * 10);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         }
+
     }
 }

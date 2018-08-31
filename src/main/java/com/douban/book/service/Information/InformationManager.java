@@ -112,24 +112,25 @@ public class InformationManager extends GenericGenerator {
                             System.out.println("Information saved successful !");
                             System.out.println("----------------------------------------------------");
                         }else{
-                            SendMesage sendMesage = new SendMesage();
                             try {
-                                sendMesage.sendInformationError("dulovefighting@sina.com");
-                            } catch (Exception e) {
-                                e.printStackTrace();
+                                System.out.println("休眠2 ........-_- ........-_- ........-_- ........-_- ........-_- ........-_- ........-_- ........-_-");
+                                Thread.sleep(1000 * 60 * 10);
+
+                            }catch (InterruptedException interrupted){
+                                interrupted.printStackTrace();
                             }
-                            break outer;
                         }
                     }catch(NullPointerException n){
                         System.err.println("ERROR ERROR ERROR ERROR ERROR ERROR ");
                         SendMesage sendMesage = new SendMesage();
                         try {
                             sendMesage.sendInformationError("dulovefighting@sina.com");
+                            System.out.println("休眠1 ........-_- ........-_- ........-_- ........-_- ........-_- ........-_- ........-_- ........-_-");
+                            Thread.sleep(1000 * 60 * 10);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
                         n.printStackTrace();
-                        break outer;
                     } catch (Exception e) {
                         e.printStackTrace();
                         continue;

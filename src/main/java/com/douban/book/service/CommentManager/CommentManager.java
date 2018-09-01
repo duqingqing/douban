@@ -72,6 +72,13 @@ public class CommentManager extends GenericGenerator {
                     commentDao.save(comment);
                     System.out.println("comment saved successful !");
                     System.out.println("----------------------------------------------------");
+                }else{
+                    System.out.println("休眠1 ........-_- ........-_- ........-_- ........-_- ........-_- ........-_- ........-_- ........-_-");
+                    try {
+                        Thread.sleep(1000 * 60 * 10);
+                    } catch (InterruptedException interrupted) {
+                        interrupted.printStackTrace();
+                    }
                 }
             }
         } catch (NullPointerException nullPointer) {
@@ -88,18 +95,23 @@ public class CommentManager extends GenericGenerator {
     @Test
     public void getComment() {
         BookUrl bookUrl = null;
-        for (int i = 1386; i <= 1400; i++) {
-//            Optional<BookUrl> bookUrlOptional = bookUrlDao.findById((long) i);
-//            if (bookUrlOptional.isPresent()) {
-//                bookUrl = bookUrlOptional.get();
-//            }
+        for (int i = 22; i <= 1000; i++) {
             bookUrl = bookUrlDao.findByBookUrlId((long)i);
             String url = bookUrl.getBookUrl();
             System.out.println("【书本地址】" + url);
             String commentUrl = url + "comments/";
             try {
                 Document document = GetDocument.connect(commentUrl);
-                int pageSize = (((GetNumberFromString.getNumber(document.select("#total-comments").text()) / 20) + 1) > 5) ? 5 : 1;
+                String body=document.select("body").text();
+                if(body.equals("")){
+                    try {
+                        System.out.println("休眠2 ........-_- ........-_- ........-_- ........-_- ........-_- ........-_- ........-_- ........-_-");
+                        Thread.sleep(1000 * 60 * 10);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                int pageSize = (((GetNumberFromString.getNumber(document.select("#total-comments").text()) / 20) + 1) > 10) ? 10 : 1;
                 System.out.println(pageSize);
                 for (int j = 1; j < pageSize; j++) {
                     String goalUrl = commentUrl + "hot?p=" + j;
@@ -114,10 +126,8 @@ public class CommentManager extends GenericGenerator {
                 }
             } catch (NullPointerException ne) {
                 ne.printStackTrace();
-                SendMesage sendMesage = new SendMesage();
                 try {
-                    sendMesage.sendCommentError("dulovefighting@sina.com");
-                    System.out.println("休眠2 ........-_- ........-_- ........-_- ........-_- ........-_- ........-_- ........-_- ........-_-");
+                    System.out.println("休眠3 ........-_- ........-_- ........-_- ........-_- ........-_- ........-_- ........-_- ........-_-");
                     Thread.sleep(1000 * 60 * 10);
                 } catch (Exception e) {
                     e.printStackTrace();

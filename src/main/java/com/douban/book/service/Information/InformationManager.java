@@ -113,7 +113,7 @@ public class InformationManager extends GenericGenerator {
                             System.out.println("----------------------------------------------------");
                         }else{
                             try {
-                                System.out.println("休眠2 ........-_- ........-_- ........-_- ........-_- ........-_- ........-_- ........-_- ........-_-");
+                                System.out.println("休眠1 ........-_- ........-_- ........-_- ........-_- ........-_- ........-_- ........-_- ........-_-");
                                 Thread.sleep(1000 * 60 * 10);
 
                             }catch (InterruptedException interrupted){
@@ -124,8 +124,7 @@ public class InformationManager extends GenericGenerator {
                         System.err.println("ERROR ERROR ERROR ERROR ERROR ERROR ");
                         SendMesage sendMesage = new SendMesage();
                         try {
-                            sendMesage.sendInformationError("dulovefighting@sina.com");
-                            System.out.println("休眠1 ........-_- ........-_- ........-_- ........-_- ........-_- ........-_- ........-_- ........-_-");
+                            System.out.println("休眠2 ........-_- ........-_- ........-_- ........-_- ........-_- ........-_- ........-_- ........-_-");
                             Thread.sleep(1000 * 60 * 10);
                         } catch (Exception e) {
                             e.printStackTrace();

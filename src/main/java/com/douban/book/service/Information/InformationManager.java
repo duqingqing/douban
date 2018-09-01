@@ -12,6 +12,7 @@ import com.douban.book.dao.book.url.dao.BookUrlDao;
 import com.douban.book.dao.book.url.domain.BookUrl;
 import com.douban.book.dao.ip.dao.IpDao;
 import com.douban.book.dao.ip.domain.Ip;
+import lombok.extern.slf4j.Slf4j;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -24,6 +25,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Component
+@Slf4j
 public class InformationManager extends GenericGenerator {
 
     @Autowired
@@ -113,7 +115,7 @@ public class InformationManager extends GenericGenerator {
                             System.out.println("----------------------------------------------------");
                         }else{
                             try {
-                                System.out.println("休眠1 ........-_- ........-_- ........-_- ........-_- ........-_- ........-_- ........-_- ........-_-");
+                                log.info("信息抓空");
                                 Thread.sleep(1000 * 60 * 10);
 
                             }catch (InterruptedException interrupted){
@@ -124,7 +126,7 @@ public class InformationManager extends GenericGenerator {
                         System.err.println("ERROR ERROR ERROR ERROR ERROR ERROR ");
                         SendMesage sendMesage = new SendMesage();
                         try {
-                            System.out.println("休眠2 ........-_- ........-_- ........-_- ........-_- ........-_- ........-_- ........-_- ........-_-");
+                            log.info("无法访问信息页面");
                             Thread.sleep(1000 * 60 * 10);
                         } catch (Exception e) {
                             e.printStackTrace();

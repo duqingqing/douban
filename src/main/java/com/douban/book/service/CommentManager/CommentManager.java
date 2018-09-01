@@ -15,6 +15,7 @@ import com.douban.book.dao.comment.dao.CommentDao;
 import com.douban.book.dao.comment.domain.Comment;
 import com.douban.book.dao.ip.dao.IpDao;
 import com.douban.book.dao.ip.domain.Ip;
+import lombok.extern.slf4j.Slf4j;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -25,6 +26,7 @@ import java.net.SocketTimeoutException;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 public class CommentManager extends GenericGenerator {
     @Autowired
     BookUrlDao bookUrlDao;
@@ -63,7 +65,7 @@ public class CommentManager extends GenericGenerator {
                 System.out.println("【星级】" + star);
                 System.out.println("【内容】" + content);
                 System.out.println("【投票】" + likes);
-                if (!(content.trim().equals("")) && !(star.trim().equals(""))) {
+                if (!(content.trim().equals(""))) {
                     Comment comment = new Comment();
                     comment.setContent(JudgeStringFormat.filterEmoji(content, ""));
                     comment.setLikes(likes);
@@ -73,7 +75,7 @@ public class CommentManager extends GenericGenerator {
                     System.out.println("comment saved successful !");
                     System.out.println("----------------------------------------------------");
                 }else{
-                    System.out.println("休眠1 ........-_- ........-_- ........-_- ........-_- ........-_- ........-_- ........-_- ........-_-");
+                    log.info("评论信息抓空");
                     try {
                         Thread.sleep(1000 * 60 * 10);
                     } catch (InterruptedException interrupted) {
@@ -83,7 +85,7 @@ public class CommentManager extends GenericGenerator {
             }
         } catch (NullPointerException nullPointer) {
             nullPointer.printStackTrace();
-            System.out.println("休眠1 ........-_- ........-_- ........-_- ........-_- ........-_- ........-_- ........-_- ........-_-");
+            log.info("无法访问当前评论页面");
             try {
                 Thread.sleep(1000 * 60 * 10);
             } catch (InterruptedException interrupted) {
@@ -127,7 +129,7 @@ public class CommentManager extends GenericGenerator {
             } catch (NullPointerException ne) {
                 ne.printStackTrace();
                 try {
-                    System.out.println("休眠3 ........-_- ........-_- ........-_- ........-_- ........-_- ........-_- ........-_- ........-_-");
+                    log.info("无法访问评论首页面");
                     Thread.sleep(1000 * 60 * 10);
                 } catch (Exception e) {
                     e.printStackTrace();

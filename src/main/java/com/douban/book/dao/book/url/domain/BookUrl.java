@@ -4,13 +4,14 @@ import com.douban.book.base.domain.BaseEntity;
 import com.douban.book.dao.book.type.domain.BookType;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
 import javax.persistence.*;
 @Getter
 @Setter
-@Slf4j
+@ToString
 @Entity
 @Table(name="book_url")
 public class BookUrl extends BaseEntity{

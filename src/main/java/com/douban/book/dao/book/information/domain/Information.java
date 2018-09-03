@@ -5,6 +5,7 @@ import com.douban.book.dao.book.type.domain.BookType;
 import com.douban.book.dao.book.url.domain.BookUrl;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
@@ -14,7 +15,7 @@ import javax.persistence.*;
 @Table(name = "book_information")
 @Getter
 @Setter
-@Slf4j
+@ToString
 public class Information extends BaseEntity {
 
     @Column(name = "title")

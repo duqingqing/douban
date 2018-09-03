@@ -97,7 +97,7 @@ public class CommentManager extends GenericGenerator {
     @Test
     public void getComment() {
         BookUrl bookUrl = null;
-        for (int i = 22; i <= 1000; i++) {
+        for (int i = 319; i <= 500; i++) {
             bookUrl = bookUrlDao.findByBookUrlId((long)i);
             String url = bookUrl.getBookUrl();
             System.out.println("【书本地址】" + url);
@@ -107,7 +107,7 @@ public class CommentManager extends GenericGenerator {
                 String body=document.select("body").text();
                 if(body.equals("")){
                     try {
-                        System.out.println("休眠2 ........-_- ........-_- ........-_- ........-_- ........-_- ........-_- ........-_- ........-_-");
+                        log.info("Document的信息抓空");
                         Thread.sleep(1000 * 60 * 10);
                     } catch (Exception e) {
                         e.printStackTrace();

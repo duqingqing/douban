@@ -3,6 +3,7 @@ package com.douban.book.dao.book.type.domain;
 import com.douban.book.base.domain.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.Column;
@@ -13,7 +14,7 @@ import javax.persistence.Table;
 @Table(name="book_type")
 @Getter
 @Setter
-@Slf4j
+@ToString
 public class BookType extends BaseEntity {
     @Column(name="url")
     private String url;

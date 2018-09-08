@@ -77,7 +77,7 @@ public class CommentManager extends GenericGenerator {
                 }else{
                     log.info("评论信息抓空");
                     try {
-                        Thread.sleep(1000 * 60 * 10);
+                        Thread.sleep(1000 * 60 * 1);
                     } catch (InterruptedException interrupted) {
                         interrupted.printStackTrace();
                     }
@@ -87,7 +87,7 @@ public class CommentManager extends GenericGenerator {
             nullPointer.printStackTrace();
             log.info("无法访问当前评论页面");
             try {
-                Thread.sleep(1000 * 60 * 10);
+                Thread.sleep(1000 * 60 * 1);
             } catch (InterruptedException interrupted) {
                 interrupted.printStackTrace();
             }
@@ -97,7 +97,7 @@ public class CommentManager extends GenericGenerator {
     @Test
     public void getComment() {
         BookUrl bookUrl = null;
-        for (int i = 319; i <= 500; i++) {
+        for (int i = 601; i <= 1000; i++) {
             bookUrl = bookUrlDao.findByBookUrlId((long)i);
             String url = bookUrl.getBookUrl();
             System.out.println("【书本地址】" + url);
@@ -108,7 +108,7 @@ public class CommentManager extends GenericGenerator {
                 if(body.equals("")){
                     try {
                         log.info("Document的信息抓空");
-                        Thread.sleep(1000 * 60 * 10);
+                        Thread.sleep(1000 * 60 * 1);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -130,7 +130,7 @@ public class CommentManager extends GenericGenerator {
                 ne.printStackTrace();
                 try {
                     log.info("无法访问评论首页面");
-                    Thread.sleep(1000 * 60 * 10);
+                    Thread.sleep(1000 * 60 * 1);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

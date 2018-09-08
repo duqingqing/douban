@@ -68,7 +68,7 @@ public class InformationManager extends GenericGenerator {
     public void getInformation() {
         Document document = null;
         outer:
-        for (int k = 7; k <= 146; k++) {
+        for (int k = 11; k <= 20; k++) {
             BookType bookType = this.bookTypeDao.getByBookTypeById((long) k);
             List<BookUrl> bookUrlList = this.bookUrlDao.findByType(bookType);
             for (int i = 0; i < bookUrlList.size(); i++) {
@@ -116,7 +116,7 @@ public class InformationManager extends GenericGenerator {
                         }else{
                             try {
                                 log.info("信息抓空");
-                                Thread.sleep(1000 * 60 * 10);
+                                Thread.sleep(1000 * 60 * 1);
 
                             }catch (InterruptedException interrupted){
                                 interrupted.printStackTrace();
@@ -127,7 +127,7 @@ public class InformationManager extends GenericGenerator {
                         SendMesage sendMesage = new SendMesage();
                         try {
                             log.info("无法访问信息页面");
-                            Thread.sleep(1000 * 60 * 10);
+                            Thread.sleep(1000 * 60 * 1);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

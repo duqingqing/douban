@@ -16,12 +16,15 @@ import com.douban.book.dao.comment.domain.Comment;
 import com.douban.book.dao.ip.dao.IpDao;
 import com.douban.book.dao.ip.domain.Ip;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.SQLQuery;
+import org.hibernate.transform.Transformers;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.management.Query;
 import java.net.SocketTimeoutException;
 import java.util.List;
 import java.util.Optional;
@@ -37,17 +40,26 @@ public class CommentManager extends GenericGenerator {
     @Autowired
     IpDao ipDao;
 
-    public Ip getIpByRandom() {
-        Ip ip = new Ip();
-        List<Ip> ipList = ipDao.findAll();
-        int length = ipList.size();
-        int index = (int) (Math.random() * length);
-        ip = ipList.get(index);
-        while (ip.getMark() == 1) {
-            index = (int) (Math.random() * length);
-            ip = ipList.get(index);
+    /**
+     * 返回当前要获取的book_url_id的值
+     */
+    public Long idFactory() {
+        Long bookUrlId = commentDao.findLastOne();
+        int number = commentDao.getCommentsNumber(bookUrlId);
+        log.info("book_url_id "+bookUrlId+"总共 "+number+" 条数据");
+        if(number>=180){
+            return ++bookUrlId;
+        }else{
+            commentDao.deleteCommentsByBookUrl(bookUrlId);
+            log.info("不合理数据...删除book_url_id="+bookUrlId+"的数据");
+            return  bookUrlId;
         }
-        return ip;
+    }
+
+    @Test
+    public void testIdFactory(){
+        Long number = idFactory();
+        System.out.println(number.intValue());
     }
 
     public void getoneComment(String url, BookUrl bookUrl) {
@@ -74,7 +86,7 @@ public class CommentManager extends GenericGenerator {
                     commentDao.save(comment);
                     System.out.println("comment saved successful !");
                     System.out.println("----------------------------------------------------");
-                }else{
+                } else {
                     log.info("评论信息抓空");
                     try {
                         Thread.sleep(1000 * 60 * 1);
@@ -97,15 +109,17 @@ public class CommentManager extends GenericGenerator {
     @Test
     public void getComment() {
         BookUrl bookUrl = null;
-        for (int i = 601; i <= 1000; i++) {
-            bookUrl = bookUrlDao.findByBookUrlId((long)i);
+        int start = idFactory().intValue();
+        for ( int i = start; i <= 1200; i++) {
+            bookUrl = bookUrlDao.findByBookUrlId((long) i);
             String url = bookUrl.getBookUrl();
             System.out.println("【书本地址】" + url);
             String commentUrl = url + "comments/";
             try {
                 Document document = GetDocument.connect(commentUrl);
-                String body=document.select("body").text();
-                if(body.equals("")){
+                String body = document.select("body").text();
+                if (body.equals("")) {
+                    i--;
                     try {
                         log.info("Document的信息抓空");
                         Thread.sleep(1000 * 60 * 1);
@@ -121,6 +135,7 @@ public class CommentManager extends GenericGenerator {
                     try {
                         getoneComment(goalUrl, bookUrl);
                     } catch (NullPointerException n) {
+                        j--;
                         n.printStackTrace();
                         System.out.println("此条评论为空....................................");
                         continue;
@@ -129,6 +144,7 @@ public class CommentManager extends GenericGenerator {
             } catch (NullPointerException ne) {
                 ne.printStackTrace();
                 try {
+                    i--;
                     log.info("无法访问评论首页面");
                     Thread.sleep(1000 * 60 * 1);
                 } catch (Exception e) {

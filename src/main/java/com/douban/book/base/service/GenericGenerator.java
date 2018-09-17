@@ -1,7 +1,7 @@
 package com.douban.book.base.service;
 
 import com.douban.book.config.JpaConfiguration;
-import com.douban.book.doubanbook.DoubanbookApplication;
+import com.douban.book.DoubanbookApplication;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;

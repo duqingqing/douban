@@ -1,4 +1,4 @@
-package com.douban.book.doubanbook;
+package com.douban.book;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

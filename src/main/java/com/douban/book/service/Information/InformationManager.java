@@ -68,7 +68,7 @@ public class InformationManager extends GenericGenerator {
     public void getInformation() {
         Document document = null;
         outer:
-        for (int k = 11; k <= 20; k++) {
+        for (int k = 12; k <= 20; k++) {
             BookType bookType = this.bookTypeDao.getByBookTypeById((long) k);
             List<BookUrl> bookUrlList = this.bookUrlDao.findByType(bookType);
             for (int i = 0; i < bookUrlList.size(); i++) {

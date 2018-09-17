@@ -16,7 +16,7 @@ import javax.sql.DataSource;
 import java.util.Properties;
 
 @Configuration
-@EnableJpaRepositories(basePackages = "com.douban.book")
+@EnableJpaRepositories(basePackages = "com.douban.book.*")
 public class JpaConfiguration {
 
     @Bean
@@ -38,7 +38,7 @@ public class JpaConfiguration {
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         LocalContainerEntityManagerFactoryBean entityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
         entityManagerFactoryBean.setDataSource(dataSource());
-        entityManagerFactoryBean.setPackagesToScan("com.douban.book");
+        entityManagerFactoryBean.setPackagesToScan("com.douban.book.*");
         entityManagerFactoryBean.setJpaProperties(buildHibernateProperties());
         entityManagerFactoryBean.setJpaVendorAdapter(new HibernateJpaVendorAdapter() {{
             setDatabase(Database.MYSQL);

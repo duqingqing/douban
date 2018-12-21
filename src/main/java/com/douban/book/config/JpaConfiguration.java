@@ -27,8 +27,9 @@ public class JpaConfiguration {
     @Bean
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        //characterEncoding=utf8mb4 如果你有MySQL 5.5或更高版本，你可以将列编码从更改utf8为utf8mb4。此编码允许以UTF-8存储占用4个字节的字符。
         dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-        dataSource.setUrl("jdbc:mysql://192.168.59.128:3306/doubanbook?useUnicode=true&characterEncoding=utf8");
+        dataSource.setUrl("jdbc:mysql://127.0.0.1:3306/douban?useUnicode=true&characterEncoding=utf8&useSSL=true");
         dataSource.setUsername("root");
         dataSource.setPassword("admin");
         return dataSource;

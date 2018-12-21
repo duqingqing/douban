@@ -26,7 +26,7 @@ public class BookUrlManager extends GenericGenerator {
         List<BookUrl> bookUrlList = new ArrayList<BookUrl>();
         List<BookType> bookTypeList  = bookTypeDao.findAll();
         for(int j=0;j<bookTypeList.size();j++) {
-            if (bookTypeList.get(j).getId() >= (long)126) {
+            if (bookTypeList.get(j).getId() >= (long)35) {
                 String typeUrl = bookTypeList.get(j).getUrl();
                 Document firstDocument = GetDocument.connect(typeUrl);
                 int totalPage = Integer.parseInt(firstDocument.select("#subject_list > div.paginator > a").last().text());

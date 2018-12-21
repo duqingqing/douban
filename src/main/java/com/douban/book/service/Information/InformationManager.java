@@ -3,6 +3,7 @@ package com.douban.book.service.Information;
 import com.douban.book.base.service.GenericGenerator;
 import com.douban.book.common.GetDocument;
 import com.douban.book.common.GetNumberFromString;
+import com.douban.book.common.NetStateTest;
 import com.douban.book.common.SendMesage;
 import com.douban.book.dao.book.information.dao.InformationDao;
 import com.douban.book.dao.book.information.domain.Information;
@@ -37,38 +38,38 @@ public class InformationManager extends GenericGenerator {
     @Autowired
     IpDao ipDao;
 
-    @Test
-    public void findByBookType() {
-        BookType bookType = this.bookTypeDao.getByBookTypeById((long) 2);
-        System.out.println(bookType.getType());
-        List<BookUrl> bookUrlList = this.bookUrlDao.findByType(bookType);
-        System.out.println(bookUrlList.size());
-    }
+//    @Test
+//    public void findByBookType() {
+//        BookType bookType = this.bookTypeDao.getByBookTypeById((long) 2);
+//        System.out.println(bookType.getType());
+//        List<BookUrl> bookUrlList = this.bookUrlDao.findByType(bookType);
+//        System.out.println(bookUrlList.size());
+//    }
 
-    public Ip getIpByRandom() {
-        Ip ip = null;
-        List<Ip> ipList = this.ipDao.findAll();
-        int index = (int) (Math.random() * ipList.size());
-        ip = ipList.get(index);
-        while (ip.getMark() == 1) {
-            index = (int) (Math.random() * ipList.size());
-            ip = ipList.get(index);
-        }
-        return ip;
-    }
+//    public Ip getIpByRandom() {
+//        Ip ip = null;
+//        List<Ip> ipList = this.ipDao.findAll();
+//        int index = (int) (Math.random() * ipList.size());
+//        ip = ipList.get(index);
+//        while (ip.getMark() == 1) {
+//            index = (int) (Math.random() * ipList.size());
+//            ip = ipList.get(index);
+//        }
+//        return ip;
+//    }
 
-    @Test
-    public void testIP() {
-        Ip ip = null;
-        ip = getIpByRandom();
-        System.out.println(ip.getAddress());
-        System.out.println(ip.getPort());
-    }
-    @Test
+//    @Test
+//    public void testIP() {
+//        Ip ip = null;
+//        ip = getIpByRandom();
+//        System.out.println(ip.getAddress());
+//        System.out.println(ip.getPort());
+//    }
+
+
     public void getInformation() {
         Document document = null;
-        outer:
-        for (int k = 12; k <= 20; k++) {
+        for (int k = 22; k <= 145; k++) {
             BookType bookType = this.bookTypeDao.getByBookTypeById((long) k);
             List<BookUrl> bookUrlList = this.bookUrlDao.findByType(bookType);
             for (int i = 0; i < bookUrlList.size(); i++) {
@@ -82,6 +83,16 @@ public class InformationManager extends GenericGenerator {
                     double score = 0;
                     String bookReviewUrl = null;
                     try {
+                        NetStateTest netState = new NetStateTest();
+                        while (!netState.isConnect()){
+                            try {
+                                System.out.println("网络不好停止一会");
+                                Thread.sleep(6 * 1000);
+                            }catch (Exception e1){
+                                e1.printStackTrace();
+                            }
+                        }
+                        System.out.println("网络正常开始执行");
                         document = GetDocument.connect(url);
                         title = document.select("#wrapper > h1 > span").text();
                         author = document.select("#info > a:nth-child(2)").text();
@@ -113,11 +124,11 @@ public class InformationManager extends GenericGenerator {
                             informationDao.save(information);
                             System.out.println("Information saved successful !");
                             System.out.println("----------------------------------------------------");
+                            Thread.sleep(8*1000);
                         }else{
                             try {
                                 log.info("信息抓空");
                                 Thread.sleep(1000 * 60 * 1);
-
                             }catch (InterruptedException interrupted){
                                 interrupted.printStackTrace();
                             }
